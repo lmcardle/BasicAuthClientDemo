@@ -8,8 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+@class DiaryEntry;
+
 @interface DiaryStore : NSObject
 +(void)setupDiaryStore:(NSString*)userName password:(NSString*)password;
 
 +(NSArray*)diaryEntries;
++(void)saveDiaryEntry:(DiaryEntry*)diaryEntry;
 @end

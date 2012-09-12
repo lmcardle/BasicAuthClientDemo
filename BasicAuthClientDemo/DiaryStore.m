@@ -30,6 +30,9 @@ static RKObjectManager* diaryObjectManager;
   [diaryEntryMapping mapKeyPath:@"title" toAttribute:@"title"];
   
   [diaryObjectManager.mappingProvider addObjectMapping:diaryEntryMapping];
+  [diaryObjectManager.mappingProvider setSerializationMapping:diaryEntryMapping forClass:[DiaryEntry class]];
+  
+  [diaryObjectManager.router routeClass:[DiaryEntry class] toResourcePath:@"/diary_entries.json"];
 }
 
 +(NSArray*)diaryEntries {
@@ -43,4 +46,9 @@ static RKObjectManager* diaryObjectManager;
 
   return [NSArray new];
 }
+
++(void)saveDiaryEntry:(DiaryEntry*)diaryEntry {
+  [diaryObjectManager postObject:diaryEntry delegate:nil];
+}
+
 @end
