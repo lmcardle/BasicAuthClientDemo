@@ -9,4 +9,7 @@
 #import "DiaryEntry.h"
 
 @implementation DiaryEntry
+-(NSString*)description {
+  return self.title;
+}
 @end
