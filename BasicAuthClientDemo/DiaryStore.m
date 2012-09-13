@@ -27,7 +27,7 @@ static RKObjectManager* diaryObjectManager;
 
 +(void)setupDiaryEntryMapping {
   RKObjectMapping* diaryEntryMapping = [RKObjectMapping mappingForClass:[DiaryEntry class]];
-  [diaryEntryMapping mapKeyPath:@"title" toAttribute:@"title"];
+  [diaryEntryMapping mapAttributes:@"title", nil];
   
   [diaryObjectManager.mappingProvider addObjectMapping:diaryEntryMapping];
   
