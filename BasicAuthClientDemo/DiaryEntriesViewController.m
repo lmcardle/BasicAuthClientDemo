@@ -29,14 +29,21 @@
   self.diaryEntries = [DiaryEntry allObjects];
   
   if (self.diaryEntries.count == 0) {
-    [DiaryStore fetchDiaryEntries:^{
-      self.diaryEntries = [DiaryEntry allObjects];
-      [self.view reloadData];
-    }];
+    [self refreshEntries];
   };
   
   self.view.dataSource = self;
   self.view.delegate = self;
+  
+  self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshEntries)];
+}
+
+-(void)refreshEntries {
+  NSLog(@"Refreshing!");
+  [DiaryStore fetchDiaryEntries:^{
+    self.diaryEntries = [DiaryEntry allObjects];
+    [self.view reloadData];
+  }];
 }
 
 -(int)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

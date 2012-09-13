@@ -18,7 +18,8 @@
   
   [DiaryStore setupDiaryStore:@"test@test.com" password:@"password"];
 
-  self.window.rootViewController = [DiaryEntriesViewController new];
+  DiaryEntriesViewController* diaryEntriesVC = [DiaryEntriesViewController new];
+  self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:diaryEntriesVC];
   
   self.window.backgroundColor = [UIColor whiteColor];
   [self.window makeKeyAndVisible];
