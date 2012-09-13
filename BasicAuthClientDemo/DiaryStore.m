@@ -28,12 +28,12 @@ static RKObjectManager* diaryObjectManager;
 +(void)setupDiaryEntryMapping {
   RKObjectMapping* diaryEntryMapping = [RKObjectMapping mappingForClass:[DiaryEntry class]];
   [diaryEntryMapping mapKeyPath:@"title" toAttribute:@"title"];
+  
   [diaryObjectManager.mappingProvider addObjectMapping:diaryEntryMapping];
   
-  RKObjectMapping* diarySerializationMapping = [RKObjectMapping mappingForClass:[DiaryEntry class]];
-  diarySerializationMapping.rootKeyPath = @"diary_entry";
-  [diarySerializationMapping mapKeyPath:@"title" toAttribute:@"title"];
-  [diaryObjectManager.mappingProvider setSerializationMapping:diarySerializationMapping forClass:[DiaryEntry class]];
+  RKObjectMapping* serializationMapping = diaryEntryMapping.inverseMapping;
+  serializationMapping.rootKeyPath = @"diary_entry";
+  [diaryObjectManager.mappingProvider setSerializationMapping:serializationMapping forClass:[DiaryEntry class]];
   
   [diaryObjectManager.router routeClass:[DiaryEntry class] toResourcePath:@"/diary_entries.json"];
 }
