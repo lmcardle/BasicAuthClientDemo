@@ -10,21 +10,33 @@
 
 #import "DiaryEntry.h"
 #import "DiaryStore.h"
+#import "RestKit.h"
 
 @interface DiaryEntriesViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (strong) NSArray* diaryEntries;
-@property (weak, nonatomic) IBOutlet UITableView *diaryEntriesTable;
+@property (weak, nonatomic) UITableView *view;
 @end
 
 @implementation DiaryEntriesViewController
 
+-(void)loadView {
+  self.view = [UITableView new];
+}
+
 -(void)viewDidLoad {
   [super viewDidLoad];
   
-  self.diaryEntries = [DiaryStore diaryEntries];
+  self.diaryEntries = [DiaryEntry allObjects];
   
-  self.diaryEntriesTable.dataSource = self;
-  self.diaryEntriesTable.delegate = self;
+  if (self.diaryEntries.count == 0) {
+    [DiaryStore fetchDiaryEntries:^{
+      self.diaryEntries = [DiaryEntry allObjects];
+      [self.view reloadData];
+    }];
+  };
+  
+  self.view.dataSource = self;
+  self.view.delegate = self;
 }
 
 -(int)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

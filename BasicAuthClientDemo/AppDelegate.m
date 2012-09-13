@@ -8,7 +8,7 @@
 
 #import "AppDelegate.h"
 
-#import "DiaryEntry.h"
+#import "DiaryEntriesViewController.h"
 #import "DiaryStore.h"
 
 @implementation AppDelegate
@@ -17,12 +17,8 @@
   self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
   
   [DiaryStore setupDiaryStore:@"test@test.com" password:@"password"];
-    
-  DiaryEntry* de = [DiaryEntry new];
-  de.title = @"My post from iOS!";
-  
-  [DiaryStore saveDiaryEntry:de];
-//  [DiaryStore diaryEntries];
+
+  self.window.rootViewController = [DiaryEntriesViewController new];
   
   self.window.backgroundColor = [UIColor whiteColor];
   [self.window makeKeyAndVisible];

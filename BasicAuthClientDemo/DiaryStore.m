@@ -22,12 +22,19 @@ static RKObjectManager* diaryObjectManager;
   diaryObjectManager = [[RKObjectManager alloc] init];
   diaryObjectManager.client = diaryClient;
   
+  diaryObjectManager.objectStore = [RKManagedObjectStore objectStoreWithStoreFilename:@"diaryEntryStore.sqlite3"];
+  
   [self setupDiaryEntryMapping];
 }
 
 +(void)setupDiaryEntryMapping {
-  RKObjectMapping* diaryEntryMapping = [RKObjectMapping mappingForClass:[DiaryEntry class]];
+  RKManagedObjectMapping* diaryEntryMapping = [RKManagedObjectMapping mappingForClass:[DiaryEntry class] inManagedObjectStore:diaryObjectManager.objectStore];
+  // XXX: OMG, objectClass is set wrong until we specify it.
+  // Filing a bug report...
+  diaryEntryMapping.objectClass = [DiaryEntry class];
+  [diaryEntryMapping mapKeyPath:@"id" toAttribute:@"diaryEntryId"];
   [diaryEntryMapping mapAttributes:@"title", nil];
+  diaryEntryMapping.primaryKeyAttribute = @"diaryEntryId";
   
   [diaryObjectManager.mappingProvider addObjectMapping:diaryEntryMapping];
   
@@ -38,16 +45,18 @@ static RKObjectManager* diaryObjectManager;
   [diaryObjectManager.router routeClass:[DiaryEntry class] toResourcePath:@"/diary_entries.json"];
 }
 
-+(NSArray*)diaryEntries {
++(void)fetchDiaryEntries:(void(^)(void))completionBlock {
   [diaryObjectManager loadObjectsAtResourcePath:@"/diary_entries.json" usingBlock:^(RKObjectLoader *loader) {
     loader.objectMapping = [diaryObjectManager.mappingProvider objectMappingForClass:[DiaryEntry class]];
     
     loader.onDidLoadObjects = ^(NSArray* objects) {
-      NSLog(@"%@", objects);
+      if (completionBlock)
+        completionBlock();
+    };
+    loader.onDidFailLoadWithError = ^(NSError* err) {
+      NSLog(@"%@", err);
     };
   }];
-
-  return [NSArray new];
 }
 
 +(void)saveDiaryEntry:(DiaryEntry*)diaryEntry {

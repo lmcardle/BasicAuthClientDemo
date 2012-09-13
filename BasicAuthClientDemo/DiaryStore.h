@@ -13,6 +13,6 @@
 @interface DiaryStore : NSObject
 +(void)setupDiaryStore:(NSString*)userName password:(NSString*)password;
 
-+(NSArray*)diaryEntries;
++(void)fetchDiaryEntries:(void(^)(void))completionBlock;
 +(void)saveDiaryEntry:(DiaryEntry*)diaryEntry;
 @end
